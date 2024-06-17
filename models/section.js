@@ -3,7 +3,9 @@ const mongoose=require("mongoose");
 const SectionSchema=new mongoose.Schema({
 
     sectionname:{
-        type:String
+        type:String,
+        required:true,
+        trim:true
 
     },
    subsection:[{

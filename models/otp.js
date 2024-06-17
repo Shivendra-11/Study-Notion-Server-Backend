@@ -16,33 +16,25 @@ const otpSchema = new mongoose.schema({
   },
 });
 
+// pre middleware to send the otp to the user after that it save entry to the db
 
-// pre middleware to send the otp to the user after that it save entry to the db 
-
-async function sendverificationeEmail(email , otp){
-  try{
-    
-      const mailResponse = await mailSender (email,"Verification Email form Study Notion " , otp); 
-      console.log("Email send Succesfully", mailResponse);
-     
-  }catch(error){
-    console.log("error while sending mail",error);
-    throw error
-
+async function sendverificationeEmail(email, otp) {
+  try {
+    const mailResponse = await mailSender(
+      email,
+      "Verification Email form Study Notion ",
+      otp
+    );
+    console.log("Email send Succesfully", mailResponse);
+  } catch (error) {
+    console.log("error while sending mail", error);
+    throw error;
   }
-} 
+}
 
-otpSchema.pre("save",async function (next,){
-  await sendverificationeEmail(this.email , this.otp);
+otpSchema.pre("save", async function (next) {
+  await sendverificationeEmail(this.email, this.otp);
   next();
-})
-
-
-
-
-
-
-
-
+});
 
 module.exports = mongoose.model("otp", otpSchema);
