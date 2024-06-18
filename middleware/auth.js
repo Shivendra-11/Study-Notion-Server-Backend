@@ -102,7 +102,7 @@ exports.IsAdmin = async (req, res, next){
 }
 
 
-
+// Admin
 exports.IsInstructor = async (req, res, next){
     try {
 

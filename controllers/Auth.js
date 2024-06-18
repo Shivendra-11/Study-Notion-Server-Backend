@@ -6,69 +6,12 @@ const bcrypt=require("bcrypt");
 const jwt=require("jsonwebtoken");
 require("dotenv").config();
 
-// Function to validate email format
-
-
-// Send OTP
-exports.SendOtp = async (req, res) => {
-  try {
-    // Fetch email from the request body
-    const { email } = req.body;
-  
-    // Check if user is already registered
-    const isUserRegistered = await User.findOne({ email });
-
-    if (isUserRegistered) {
-      return res.status(400).json({
-        success: false,
-        message: "User is already registered",
-      });
-    }
-
-    // Generate unique OTP
-    var otp = otpGenrator.genrate(6, {
-      upperCaseAlphabet: false,
-      lowerCaseAlphabet: false,
-      specialChars: false, // Corrected spelling
-    });
-
-    let result = await OTP.findOne({ otp: otp });
-
-    while (result) {
-      otp = otpGenrator.genrate(6, {
-        upperCaseAlphabet: false,
-        lowerCaseAlphabet: false,
-        specialChars: false, // Corrected spelling
-      });
-
-      result = await OTP.findOne({ otp: otp });
-    }
-    const otpPayload = { email, otp };
-
-    // Create entry in the DB for the email and unique OTP
-    const otpBody = await OTP.create(otpPayload);
-
-    return res.status(200).json({
-      success: true,
-      message: "OTP sent successfully",
-      body: otpBody,
-    });
-  } catch (error) {
-    console.error(error);
-    return res.status(500).json({
-      success: false,
-      message: "Something went wrong in generating OTP",
-      details: error.message, // Corrected error message access
-    });
-  }
-};
-
 
 // Signup Handler
 
 const validateEmail = (Email) => {
   const re = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-  return re.test(String(email).toLowerCase());
+  return re.test(String(Email).toLowerCase());
 };
 exports.Signup = async (req, res) => {
   try {
@@ -169,6 +112,64 @@ exports.Signup = async (req, res) => {
     });
   }
 };
+
+
+
+// Send OTP
+
+exports.SendOtp = async (req, res) => {
+  try {
+    // Fetch email from the request body
+    const { email } = req.body;
+  
+    // Check if user is already registered
+    const isUserRegistered = await User.findOne({ email });
+
+    if (isUserRegistered) {
+      return res.status(400).json({
+        success: false,
+        message: "User is already registered",
+      });
+    }
+
+    // Generate unique OTP
+    var otp = otpGenrator.genrate(6, {
+      upperCaseAlphabet: false,
+      lowerCaseAlphabet: false,
+      specialChars: false, // Corrected spelling
+    });
+
+    let result = await OTP.findOne({ otp: otp });
+
+    while (result) {
+      otp = otpGenrator.genrate(6, {
+        upperCaseAlphabet: false,
+        lowerCaseAlphabet: false,
+        specialChars: false, // Corrected spelling
+      });
+
+      result = await OTP.findOne({ otp: otp });
+    }
+    const otpPayload = { email, otp };
+
+    // Create entry in the DB for the email and unique OTP
+    const otpBody = await OTP.create(otpPayload);
+
+    return res.status(200).json({
+      success: true,
+      message: "OTP sent successfully",
+      body: otpBody,
+    });
+  } catch (error) {
+    console.error(error);
+    return res.status(500).json({
+      success: false,
+      message: "Something went wrong in generating OTP",
+      details: error.message, // Corrected error message access
+    });
+  }
+};
+
  
 
 // Login handler
@@ -200,7 +201,7 @@ exports.login = async (req, res) => {
       const payload = {
         email: user.Email,
         id: user._id,
-        role: user.accountType,
+        accountType: user.accountType,
       };
 
       const token = jwt.sign(payload, process.env.JWT_SECRET, {
@@ -247,3 +248,5 @@ exports.changepassword=async (req,res){
   // return response 
 
 }
+
+
