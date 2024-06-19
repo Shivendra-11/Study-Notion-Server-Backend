@@ -9,12 +9,12 @@ const tagsSchema=new mongoose.Schema({
         type:String,
 
     },
-    course:{
+    course:[{
         type:mongoose.Schema.Types.ObjectId,
         require:true,
         ref:"Course"
 
-    }
+    }]
 });
 
 module.exports=mongoose.model("tags",tagsSchema);
