@@ -34,7 +34,7 @@ exports.createCourses = async (req, res) => {
     }
 
     // check for instructor
-
+//  some issue have to change here user id and insrructor id is same...
     const userId = req.user.id;
     const instructorDetails = await User.findById({ userId });
 
@@ -60,11 +60,11 @@ exports.createCourses = async (req, res) => {
 
     const thumbnailImage = await uploadImageToCloudinary(
       thumbnail,
-      process.env.FOLDER_NAME,
+      process.env.FOLDER_NAME
     );
 
     // create an entry of the course
-
+    //   these are the must field in the all courses object
     const newCourse = await Course.create({
       coursename,
       coursecontent,
@@ -74,11 +74,6 @@ exports.createCourses = async (req, res) => {
       tag: tagdetails._id,
       thumbnail: thumbnailImage.secure_url,
     });
-
-    // return res.status(200).json({
-    //     successs:true,
-    //     message:"Course created succesfully"
-    // })
 
     // add the new course ti the user schema  of instructor
 
@@ -108,25 +103,33 @@ exports.createCourses = async (req, res) => {
 
 // get all courses handler
 
+exports.showAllCourses = async (req, res) => {
+  try {
+    const allcourses = await Course.find({
+      coursename,
+      price: true,
+      thumbnail: true,
+      instructor: true,
+      ratingandreview: true,
+      StudentEnrolled: true,
+    })
+      .populate("instructor")
+      .exec();
 
-exports.showAllCourses=async(req,res)=>{
-    try{
-
-        const allcourses=await Course.find({
-            coursename,
-            price:true,
-            thumbnail:true,
-            instructor:true,
-            ratingandreview:true,
-            StudentEnrolled:true,
-        }).populate("instructor");
-
-    }catch(error){
-        console.log(error);
-        return res,status(500).json({
-            success:false,
-            message:"Cannot Fetch Data form the user",
-            error:error.message,
-        })
-    }
-}
+    return res.status(200).json({
+      success: true,
+      message: "Data fetched for all the course is succesfully",
+      details: allcourses,
+    });
+  } catch (error) {
+    console.log(error);
+    return (
+      res,
+      status(500).json({
+        success: false,
+        message: "Cannot Fetch Data form the user",
+        error: error.message,
+      })
+    );
+  }
+};
