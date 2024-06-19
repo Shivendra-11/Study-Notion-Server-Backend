@@ -6,7 +6,7 @@ const mailSender = require("../utils/mailsender");
 // get email from the body of request
 // check user for this email email validation
 // genrate token
-// update user by adding token and expiration yime
+// update user by adding token and expiration time
 // create url
 // return response
 
@@ -47,8 +47,7 @@ exports.resetPasswordToken = async (req, res) => {
 
     return res.status(200).json({
       success: true,
-      message:
-        "EmAIL sent succesfully please check the emailand change password  ",
+      message:"Email sent succesfully please check the emailand change password  ",
     });
   } catch (error) {
     return res.status(500).json({
@@ -63,12 +62,12 @@ exports.resetPasswordToken = async (req, res) => {
 exports.resetpassword = async (req, res) => {
   try {
     // data fetch
-    const { password, consfirmpassword, token } = req.body;
+    const { password, confirmpassword, token } = req.body;
 
     // here token is entered from the frontend in the body of request
 
     // validation
-    if (password != consfirmpassword) {
+    if (password !== confirmpassword) {
       return res.json({
         success: false,
         message: "Password not matching ",
@@ -77,7 +76,7 @@ exports.resetpassword = async (req, res) => {
 
     // get user detail  from the token of the user genrated above and update the password of the user in the db
 
-    const userdetails = await User.findOne({ token: token });
+    const userdetails = await User.findOne({ token: token }); 
 
     // if entry not found -send response (Invalid token or time expires)
     if (!userdetails) {

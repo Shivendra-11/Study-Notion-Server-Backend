@@ -80,7 +80,7 @@ exports.Signup = async (req, res) => {
       about:null,
       constactNumber:null,
 
-    })
+    });
     
 
     // If all validations pass, proceed with creating the user
@@ -112,8 +112,6 @@ exports.Signup = async (req, res) => {
     });
   }
 };
-
-
 
 // Send OTP
 
@@ -170,7 +168,6 @@ exports.SendOtp = async (req, res) => {
   }
 };
 
- 
 
 // Login handler
 
@@ -239,14 +236,67 @@ exports.login = async (req, res) => {
 
 // change password
 
-exports.changepassword=async (req,res){
-  // get data form the user body 
-  // get oldpassword new password confirmpassword
-  // validation
-  // update password in the db 
-  // send email-passwrod changes succesfully
-  // return response 
+exports.changepassword = async (req, res) => {
+  try {
+    // Get data from the request body
+    const { Email, oldPassword, newpassword, confirmpassword } = req.body;
 
-}
+    // Check if the user exists
+    const isuser = await User.findOne({ Email });
+
+    if (!isuser) {
+      return res.status(401).json({
+        success: false,
+        message: "Email is not valid. Please re-enter the email."
+      });
+    }
+
+    // Check if the old password matches the user's current password
+    const isMatch = await bcrypt.compare(oldPassword, isuser.Password);
+    if (!isMatch) {
+      return res.status(401).json({
+        success: false,
+        message: "Old password is incorrect."
+      });
+    }
+
+    // Validate new password and confirm password
+    if (newpassword !== confirmpassword) {
+      return res.status(401).json({
+        success: false,
+        message: "New passwords do not match. Please re-enter the password."
+      });
+    }
+
+    // Hash the new password
+    const hashedpassword = await bcrypt.hash(newpassword, 10);
+
+    // Update the password in the database
+    isuser.Password = hashedpassword;
+    await isuser.save();
+
+    // Send email notification
+    await mailSender(Email, "password change message " , "Your password has been changed successfully. If you didn't perform this action, please contact us immediately.");
+
+    return res.status(200).json({
+      success: true,
+      message:"Email sent succesfully please check the email and change password  ",
+    });
+
+    // Return response
+    res.status(200).json({
+      success: true,
+      message: "Password changed successfully."
+    });
+  } catch (error) {
+    console.log(error);
+    return res.status(500).json({
+      success: false,
+      message: "Password cannot be changed. Something went wrong."
+    });
+  }
+
+  
+};
 
 

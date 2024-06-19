@@ -15,7 +15,7 @@ const mailSender = async (email, title, body) => {
         from:'studyNotion || codeHelp-by Babbar',
         to: `${email}`,
         subject:`${title}`,
-        html:`${title}`
+        html:`${body}`
         
     });
     console.log(info);

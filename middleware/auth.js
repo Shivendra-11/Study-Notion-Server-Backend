@@ -3,7 +3,7 @@ require("dotenv").config();
 
 // Auth midleware
 
-exports.auth = async (req, res, next){
+exports.auth = async (req, res, next)=>{
 
     try {
 
