@@ -30,7 +30,16 @@ exports.Section = async (req, res) => {
       {
         new: true,
       }
-    ).populate("coursecontent");
+    ).populate({
+      path: "courseContent",
+      populate: {
+        path: "subSection",
+      },
+    })
+    .exec();
+
+    // multilayer populate 
+
 
     return res.status(200).json({
       success: true,
