@@ -43,10 +43,10 @@ const courseSchema = new mongoose.Schema({
     type:String
   },
 
-  tags:[{
+  tagscateogry:[{
 
     type:mongoose.Schema.Types.ObjectId,
-    ref:"tags"
+    ref:"tagscateogry"
   }],
   StudentEnrolled:[{
     type:mongoose.Schema.Types.ObjectId,

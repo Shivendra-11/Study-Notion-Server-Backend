@@ -4,6 +4,7 @@ const Tag = require("../models/tags");
 const { uploadImageToCloudinary } = require("../utils/cloudiary");
 require("dotenv").config();
 
+
 exports.createCourses = async (req, res) => {
   try {
     // fetch data
@@ -13,9 +14,9 @@ exports.createCourses = async (req, res) => {
       whatWillYouLearn,
       coursecontent,
       price,
-      tags,
+      tagscateogry,
     } = req.body;
-    // get thumbnail
+    // get thumbnail form the req body 
     const thumbnail = req.files.thumbnailImage;
 
     // validation
@@ -24,7 +25,7 @@ exports.createCourses = async (req, res) => {
       !courseDescription ||
       !coursecontent ||
       !price ||
-      !tags
+      !tagscateogry
     ) {
       return res.status(401).json({
         success: false,
@@ -45,12 +46,14 @@ exports.createCourses = async (req, res) => {
         success: false,
         message: "Instructor details not found ",
       });
-    }                                                         
+    } 
+
+
 
     //   check given tag is valid or not
     // to correct this 
 
-    const tagdetails = await Tag.find({ tags });
+    const tagdetails = await Tag.find({ tagscateogry });
 
     if (!tagdetails) {
       return res.status(401).json({
@@ -127,8 +130,7 @@ exports.showAllCourses = async (req, res) => {
   } catch (error) {
     console.log(error);
     return (
-      res,
-      status(500).json({
+      res.status(500).json({
         success: false,
         message: "Cannot Fetch Data form the user",
         error: error.message,

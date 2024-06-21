@@ -17,4 +17,4 @@ const tagsSchema=new mongoose.Schema({
     }]
 });
 
-module.exports=mongoose.model("tags",tagsSchema);
+module.exports=mongoose.model("tagscateogry",tagsSchema);
