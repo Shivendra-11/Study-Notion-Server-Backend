@@ -35,6 +35,8 @@ exports.createCourses = async (req, res) => {
 
     // check for instructor
 //  some issue have to change here user id and insrructor id is same...
+
+
     const userId = req.user.id;
     const instructorDetails = await User.findById({ userId });
 
@@ -43,9 +45,10 @@ exports.createCourses = async (req, res) => {
         success: false,
         message: "Instructor details not found ",
       });
-    }
+    }                                                         
 
     //   check given tag is valid or not
+    // to correct this 
 
     const tagdetails = await Tag.find({ tags });
 
@@ -75,7 +78,7 @@ exports.createCourses = async (req, res) => {
       thumbnail: thumbnailImage.secure_url,
     });
 
-    // add the new course ti the user schema  of instructor
+    // add the new course to the user schema  of instructor
 
     await User.findByIdAndUpdate(
       { _id: instructorDetails._id },

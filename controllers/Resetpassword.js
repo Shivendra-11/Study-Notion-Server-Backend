@@ -12,7 +12,6 @@ const mailSender = require("../utils/mailsender");
 
 
 // resetpasword token
-
 exports.resetPasswordToken = async (req, res) => {
   try {
     const { email } = req.body;
@@ -28,7 +27,7 @@ exports.resetPasswordToken = async (req, res) => {
     // Genrate token
     const token = crypto.randomUUID();
 
-    // update user by adding token and expiration time  ...
+    // update user by adding token and expiration time  ... int he schema of the user  so that we can fetfch the data from the user by the token and update the passwird of he user in the db 
 
     const updatedDetails = await User.findOneAndUpdate(
       { email: email },
@@ -123,3 +122,5 @@ exports.resetpassword = async (req, res) => {
     })
   }
 };
+
+

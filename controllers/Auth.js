@@ -13,6 +13,8 @@ const validateEmail = (Email) => {
   const re = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
   return re.test(String(Email).toLowerCase());
 };
+
+
 exports.Signup = async (req, res) => {
   try {
     // Fetch all the data from the request body
