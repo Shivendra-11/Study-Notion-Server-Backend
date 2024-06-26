@@ -122,7 +122,48 @@ exports.verifySignature=async (req,res)=>{
     console.log("payment is autrhorized");
 
     const {courseid,userid}=req.body.payload.entity.notes;
-    
+
+    try{
+
+         // fulfill the action 
+
+         const enrolledcourse=await Course.findOneAndUpdate({
+            _id:courseid
+         },
+           { $push:{StudentEnrolled:userid}},{
+                new:true
+            }
+         );
+
+
+
+
+
+
+
+
+        // find the course and enrolled the user 
+
+        const  enrollstudednt=await User.findOneAndUpdate(
+            {_id:courseid},
+            {$push:{course:courseid}},
+            {new:true}
+
+        );
+
+        console.log(enrollstudednt);
+        
+
+
+
+
+
+
+
+       
+    }catch(error){
+
+    }
 
 
 
